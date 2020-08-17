@@ -2,10 +2,7 @@ package com.github.aspiredipendra.grpc.greeting.client;
 
 
 import com.proto.dummy.DummyServiceGrpc;
-import com.proto.greet.GreetRequest;
-import com.proto.greet.GreetResponse;
-import com.proto.greet.GreetServiceGrpc;
-import com.proto.greet.Greeting;
+import com.proto.greet.*;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 
@@ -29,7 +26,9 @@ public class GreetingClient {
 
 
         //do something
-        doUnaryCall(channel);
+       // doUnaryCall(channel);
+
+        doServerStreamingCall(channel);
 
         System.out.println("Shutting Down channel!!");
         channel.shutdown();
@@ -57,6 +56,24 @@ public class GreetingClient {
         GreetResponse greetResponse = greetClient.greet(greetRequest);
 
         System.out.println(greetResponse.getResult());
+
+    }
+
+    private void doServerStreamingCall(ManagedChannel channel) {
+        GreetServiceGrpc.GreetServiceBlockingStub greetClient = GreetServiceGrpc.newBlockingStub(channel);
+
+        // Server Streaming
+        // we prepare the request
+        GreetManyTimesRequest greetManyTimesRequest =
+                GreetManyTimesRequest.newBuilder()
+                        .setGreeting(Greeting.newBuilder().setFirstName("Dipendra"))
+                        .build();
+
+        // we stream the responses (in a blocking manner)
+        greetClient.greetManyTimes(greetManyTimesRequest)
+                .forEachRemaining(greetManyTimesResponse -> {
+                    System.out.println(greetManyTimesResponse.getResult());
+                });
 
     }
 }
