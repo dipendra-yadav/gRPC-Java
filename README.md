@@ -1,2 +1,2 @@
 # gRPC-Java
-understand RPC with Protocol Buffers  in Java
+understand gRPC with Protocol Buffers  in Java
