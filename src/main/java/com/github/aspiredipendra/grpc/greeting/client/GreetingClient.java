@@ -1,10 +1,8 @@
 package com.github.aspiredipendra.grpc.greeting.client;
 
 
-import com.proto.dummy.DummyServiceGrpc;
 import com.proto.greet.*;
-import io.grpc.ManagedChannel;
-import io.grpc.ManagedChannelBuilder;
+import io.grpc.*;
 import io.grpc.stub.StreamObserver;
 
 import java.util.Arrays;
@@ -30,11 +28,12 @@ public class GreetingClient {
         //DummyServiceGrpc.DummyServiceBlockingStub syncClient = DummyServiceGrpc.newBlockingStub(channel);
 
 
-        //do something
+        // do something
         // doUnaryCall(channel);
         // doServerStreamingCall(channel);
-        //doClientStreamingCall(channel);
-        doBiDiStreamingCall(channel);
+        // doClientStreamingCall(channel);
+        //d oBiDiStreamingCall(channel);
+        doUnaryCallWithDeadline(channel);
 
         System.out.println("Shutting Down channel!!");
         channel.shutdown();
@@ -188,11 +187,44 @@ public class GreetingClient {
 
     }
 
+    private void doUnaryCallWithDeadline(ManagedChannel channel) {
+        GreetServiceGrpc.GreetServiceBlockingStub blockingStub = GreetServiceGrpc.newBlockingStub(channel);
+
+        // first call (3000 ms deadline)
+        try {
+            System.out.println("Sending a request with a deadline of 3000 ms");
+            GreetWithDeadlineResponse response = blockingStub.withDeadlineAfter(3000, TimeUnit.MILLISECONDS)
+                    .greetWithDeadline(GreetWithDeadlineRequest.newBuilder().setGreeting(
+                    Greeting.newBuilder().setFirstName("Stephane")
+            ).build());
+            System.out.println(response.getResult());
+        } catch (StatusRuntimeException e) {
+            if (e.getStatus().getCode() == Status.Code.DEADLINE_EXCEEDED) {
+                System.out.println("Deadline has been exceeded, we don't want the response");
+            } else {
+                e.printStackTrace();
+            }
+        }
 
 
+        // second call (100 ms deadline)
+        try {
+            System.out.println("Sending a request with a deadline of 100 ms");
+            GreetWithDeadlineResponse response = blockingStub.withDeadline(Deadline.after(100, TimeUnit.MILLISECONDS))
+                    .greetWithDeadline(GreetWithDeadlineRequest.newBuilder().setGreeting(
+                    Greeting.newBuilder().setFirstName("Stephane")
+            ).build());
+            System.out.println(response.getResult());
+        } catch (StatusRuntimeException e) {
+            if (e.getStatus().getCode() == Status.Code.DEADLINE_EXCEEDED) {
+                System.out.println("Deadline has been exceeded, we don't want the response");
+            } else {
+                e.printStackTrace();
+            }
+        }
 
 
-
+    }
 }
 
 
