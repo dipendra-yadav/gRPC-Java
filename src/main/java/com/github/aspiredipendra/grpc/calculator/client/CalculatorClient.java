@@ -15,7 +15,6 @@ public class CalculatorClient {
 
     public static void main(String[] args) {
         System.out.println("Hello I'm a gRPC client");
-
         CalculatorClient main = new CalculatorClient();
         main.run();
     }
@@ -29,7 +28,7 @@ public class CalculatorClient {
         // doServerStreamingCall(channel);
         // doClientStreamingCall(channel);
         //doBidiStreamingCall(channel);
-        doErrorCall(channel);
+          doErrorCall(channel);
 
         System.out.println("Shutting down channel");
         channel.shutdown();
