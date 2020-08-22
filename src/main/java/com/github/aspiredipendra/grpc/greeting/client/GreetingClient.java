@@ -32,7 +32,7 @@ public class GreetingClient {
         // doUnaryCall(channel);
         // doServerStreamingCall(channel);
         // doClientStreamingCall(channel);
-        //d oBiDiStreamingCall(channel);
+        // doBiDiStreamingCall(channel);
         doUnaryCallWithDeadline(channel);
 
         System.out.println("Shutting Down channel!!");
@@ -195,7 +195,7 @@ public class GreetingClient {
             System.out.println("Sending a request with a deadline of 3000 ms");
             GreetWithDeadlineResponse response = blockingStub.withDeadlineAfter(3000, TimeUnit.MILLISECONDS)
                     .greetWithDeadline(GreetWithDeadlineRequest.newBuilder().setGreeting(
-                    Greeting.newBuilder().setFirstName("Stephane")
+                    Greeting.newBuilder().setFirstName("Dipendra")
             ).build());
             System.out.println(response.getResult());
         } catch (StatusRuntimeException e) {
