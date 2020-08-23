@@ -1,5 +1,6 @@
 package com.github.aspiredipendra.grpc.calculator.client;
 
+import com.github.aspiredipendra.grpc.blog.client.BlogClient;
 import com.proto.calculator.*;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
